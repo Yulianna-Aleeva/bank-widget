@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "bank-widget"
 version = "0.1.0"
-description = ""
+description = "Серверная часть виджета банковских операций"
 authors = ["Yulianna <89673838388@mail.ru>"]
 readme = "README.md"
 packages = [{include = "src"}]
+license = {file = "LICENSE"}
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -23,9 +24,13 @@ mypy = ">=1.20.0,<2.0.0"
 [tool.black]
 line-length = 119
 exclude = [".git/", ".venv"]
+target-version = ["py310"]
 
 [tool.isort]
 line_length = 119
+force_single_line = true
+float_to_top = true
+profile = "black"
 exclude = ["venv"]
 
 [tool.mypy]
