@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from constants import DATE_FORMATS
 from src.masks import get_mask_account
 from src.masks import get_mask_card_number
@@ -21,13 +20,10 @@ def get_date(date_str: str) -> str:
 
 def mask_account_card(info: str) -> str:
     """Возвращает маскированные счёт или карту."""
-
     if len(info) == 0:
         return "Данные отсутствуют! Строка пустая."
-
     if info.replace(" ", "").isalpha() or info.replace(" ", "").isdigit():
         return "Отсутствует номер или наименование карты!"
-
     if " " not in info:
         return "Отсутствуют пробелы между номером и названием карты или счёта!"
 
