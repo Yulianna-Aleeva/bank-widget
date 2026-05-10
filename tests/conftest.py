@@ -1,3 +1,7 @@
+from typing import Any
+from typing import Dict
+from typing import List
+
 import pytest
 
 from src.masks import get_mask_account
@@ -105,3 +109,51 @@ def mask_account_card_data(request: pytest.FixtureRequest) -> tuple:
     input_data = request.param
     expected = mask_account_card(input_data)
     return input_data, expected
+
+
+# Расположение: src.processing
+TEST_FILTER_BY_STATE_DATA = [
+    # Статусы для фильтрации (state):
+    "EXECUTED",
+    "CANCELED",
+    "PENDING",
+    "ERROR",
+    "WARNING",
+    "ОШИБКА",
+    "12345",
+    "",
+]
+
+
+@pytest.fixture
+def operations_data() -> List[Dict[str, Any]]:
+    return [
+        {"id": 1, "state": "EXECUTED"},
+        {"id": 2, "state": "CANCELED"},
+        {"id": 3, "state": "PENDING"},
+        {"id": 4, "state": "ERROR"},
+        {"id": 5, "state": "WARNING"},
+        {"id": 6, "state": "ОШИБКА"},
+        {"id": 7, "state": "12345"},
+        {"id": 8},
+    ]
+
+
+@pytest.fixture(params=TEST_FILTER_BY_STATE_DATA)
+def filter_state(request: pytest.FixtureRequest) -> Any:
+    return request.param
+
+
+# Расположение: src.processing
+# test_sort_by_date...
+@pytest.fixture
+def test_sort_by_date_data() -> List[Dict[str, Any]]:
+    """Фикстура для тестов сортировки."""
+    return [
+        {"id": 1, "date": "2026-05-10"},
+        {"id": 2, "date": "2026-05-20"},
+        {"id": 3, "date": "2026-05-31"},
+        {"id": 4, "date": "2026-05-10"},
+        {"id": 5, "date": "invalid-date"},
+        {"id": 6, "date": ""},
+    ]
