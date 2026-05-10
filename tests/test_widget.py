@@ -1,65 +1,14 @@
-import pytest
-
 from src.widget import get_date
 from src.widget import mask_account_card
 
 
-@pytest.mark.parametrize(
-    "date_str, expected_result",
-    [
-        # введена корректная дата
-        ("2024-03-11T02:26:18.671407", "11.03.2024"),
-        # дата введена с пробелами
-        ("2024 03 11 02 26 18 671407", "11.03.2024"),
-        # слишком короткая дата
-        ("2024-03-11T02:26:18", "11.03.2024"),
-        ("11.03.2024", "24..2.11.0"),
-        ("02:26:18", ".:1.02:2"),
-        ("02:26:18.671407", ".6.:1.02:2"),
-        # слишком длинная дата
-        ("2024-03-11T02:26:18.671407111", "11.03.2024"),
-        # ничего не введено
-        ("", ".."),
-        # введены некорректные символы
-        ("word", "..word"),
-    ],
-)
-def test_get_date(date_str: str, expected_result: str) -> None:
-    """Тестирует функцию корректировки даты в файле src.widget."""
+# Запуск: pytest -k test_get_date
+def test_get_date(get_date_data: tuple) -> None:
+    date_str, expected_result = get_date_data
     assert get_date(date_str) == expected_result
 
 
-@pytest.mark.parametrize(
-    "info, expected_result",
-    [
-        # введены корректные данные
-        ("Visa Platinum 7000792289606361", "Visa Platinum 7000 79** **** 6361"),
-        ("Счет 73654108430135874305", "Счет **4305"),
-        # введены с пробелами
-        ("Visa Platinum 7000 79228 9606 361", "Visa Platinum 7000 79228 9606 361 ** **** 361"),
-        ("Счет 7365 41084 3013 5874305", "Счет 7365 41084 3013 **4305"),
-        # слишком короткий
-        ("Visa Platinum 7000", "Visa Platinum 7000 ** **** 7000"),
-        ("Счет 7365", "Счет **7365"),
-        # слишком длинный
-        ("Visa Platinum 7000792289606361111", "Visa Platinum 7000 79** **** 1111"),
-        ("Счет 73654108430135874305111", "Счет **5111"),
-        # пробелы
-        ("  ", "   ** **** "),
-        (" ", "  ** **** "),
-        # пустая строка
-        ("", "Данные отсутствуют! Строка пустая."),
-        # без пробелов
-        ("VisaPlatinum7000792289606361", "Отсутствуют пробелы между номером и названием карты или счёта!"),
-        ("Счет73654108430135874305", "Отсутствуют пробелы между номером и названием карты или счёта!"),
-        # без наименования
-        ("7000792289606361", "Отсутствует номер или наименование карты!"),
-        ("73654108430135874305", "Отсутствует номер или наименование карты!"),
-        # без номера
-        ("Visa Platinum", "Отсутствует номер или наименование карты!"),
-        ("Счет", "Отсутствует номер или наименование карты!"),
-    ],
-)
-def test_mask_account_card(info: str, expected_result: str) -> None:
-    """Тестирует функцию маскировки номера счёта и карты в файле src.widget."""
-    assert mask_account_card(info) == expected_result
+# Запуск: pytest -k mask_account_card
+def test_mask_account_card(mask_account_card_data: tuple) -> None:
+    bank_number, expected_result = mask_account_card_data
+    assert mask_account_card(bank_number) == expected_result
