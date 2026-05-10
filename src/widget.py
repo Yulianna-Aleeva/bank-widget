@@ -19,20 +19,16 @@ def get_date(date_str: str) -> str:
     return "Ошибка в вводе даты."
 
 
-def mask_account_card(info: str) -> str:
+def mask_account_card(bank_number: str) -> str:
     """Возвращает маскированные счёт или карту."""
-
-    if len(info) == 0:
-        return "Данные отсутствуют! Строка пустая."
-
-    if info.replace(" ", "").isalpha() or info.replace(" ", "").isdigit():
-        return "Отсутствует номер или наименование карты!"
-
-    if " " not in info:
-        return "Отсутствуют пробелы между номером и названием карты или счёта!"
-
-    name, number = info.rsplit(" ", 1)
-
+    if len(bank_number) == 0 or bank_number.isspace():
+        return "Данные отсутствуют."
+    try:
+        name, number = bank_number.rsplit(" ", 1)
+        if not (name.strip() and number.rsplit()):
+            raise ValueError("Неверный формат.")
+    except ValueError:
+        return "Отсутствуют пробелы между номером и счетом."
     if name.lower().startswith("счет"):
-        return f"{name} {get_mask_account(number)}"
-    return f"{name} {get_mask_card_number(number)}"
+        return f"{name} {get_mask_account(bank_number)}"
+    return f"{name} {get_mask_card_number(bank_number)}"

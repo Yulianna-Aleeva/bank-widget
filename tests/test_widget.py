@@ -1,45 +1,14 @@
-# import datetime
-# import string
-
-import pytest
-
 from src.widget import get_date
+from src.widget import mask_account_card
 
-# from src.widget import mask_account_card
 
-
-@pytest.mark.parametrize(
-    "date_str, expected_result",
-    [
-        # введена корректная дата
-        ("2008-03-03T17:20:01.051988", "03.03.2008"),
-        ("2008-03-03T17:20:01", "03.03.2008"),
-        ("2008-03-03", "03.03.2008"),
-        ("2008-3-3", "03.03.2008"),
-        ("08-3-3", "03.03.2008"),
-        ("20080303", "03.03.2008"),
-        # короткий формат даты
-        ("8-3-3", "Ошибка в вводе даты."),
-        ("3.3.8", "Ошибка в вводе даты."),
-        ("3/3/8", "Ошибка в вводе даты."),
-        # пустой ввод
-    ],
-)
-def test_get_date(date_str: str, expected_result: str) -> None:
-    """Тестирует функцию корректировки даты в файле src.widget."""
+# Запуск: pytest -k test_get_date
+def test_get_date(get_date_data: tuple) -> None:
+    date_str, expected_result = get_date_data
     assert get_date(date_str) == expected_result
 
 
-# В РАБОТЕ
-# @pytest.mark.parametrize(
-#     "info, expected_result",
-#     [
-#         #
-#         ("", ""),
-#         #
-#         ("", ""),
-#     ],
-# )
-# def test_mask_account_card(info: str, expected_result: str) -> None:
-#     """Тестирует функцию маскировки номера счёта и карты в файле src.widget."""
-#     assert mask_account_card(info) == expected_result
+# Запуск: pytest -k mask_account_card
+def test_mask_account_card(mask_account_card_data: tuple) -> None:
+    bank_number, expected_result = mask_account_card_data
+    assert mask_account_card(bank_number) == expected_result
