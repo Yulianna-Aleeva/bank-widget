@@ -8,7 +8,7 @@ def test_get_date(get_date_data: tuple) -> None:
     assert get_date(date_str) == expected_result
 
 
-# Запуск: pytest -k test_mask_account_card
+# Запуск: pytest -k mask_account_card
 def test_mask_account_card(mask_account_card_data: tuple) -> None:
     bank_number, expected_result = mask_account_card_data
     assert mask_account_card(bank_number) == expected_result

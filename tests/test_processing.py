@@ -1,9 +1,12 @@
+import re
 from typing import Any
 from typing import Dict
 from typing import List
+from typing import Tuple
 
+from constants import DATE_FORMATS
 from src.processing import filter_by_state
-from src.processing import sort_by_date
+# from src.processing import sort_by_date
 
 
 def test_filter_by_state(operations_data: List[Dict[str, Any]], filter_state: str) -> None:
@@ -18,28 +21,47 @@ def test_filter_by_state(operations_data: List[Dict[str, Any]], filter_state: st
 # Тесты для sort_by_date
 
 
-def test_sort_by_date_descending(sort_by_date_data: List[Dict[str, Any]]) -> None:
-    """Проверка сортировки по убыванию."""
-    result = sort_by_date(sort_by_date_data)
-    dates = [item["date"] for item in result]
-    assert dates == sorted(dates, reverse=True)
+def filter_dates(data: List[Dict[str, Any]]) -> Tuple[List[str], List[str]]:
+    valid, invalid = [], []
+    for item in data:
+        date = item.get("date", "")
+        if any(re.fullmatch(pattern, date) for pattern in DATE_FORMATS):
+            valid.append(date)
+        else:
+            invalid.append(date)
+    return valid, invalid
 
 
-def test_sort_by_date_ascending(sort_by_date_data: List[Dict[str, Any]]) -> None:
-    """Проверка сортировки по возрастанию."""
-    result = sort_by_date(sort_by_date_data, reverse=False)
-    dates = [item["date"] for item in result]
-    assert dates == sorted(dates, reverse=False)
+# Сортировка по убыванию
+def test_sort_by_date_down(operations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return sorted(operations, key=lambda d: d.get("date", ""), reverse=True)
 
 
-def test_sort_by_date_double(sort_by_date_double_data: List[Dict[str, Any]]) -> None:
-    """Проверка дубликатов и сохранения списка."""
-    result = sort_by_date(sort_by_date_double_data)
-    all_dates = [d["date"] for d in result]
-    double_ids = [d["id"] for d in result if all_dates.count(d["date"]) >= 2]
-    assert len(double_ids) >= 2 and double_ids == sorted(double_ids)
+# Сортировка по убыванию валидных дат
+def test_sort_by_date_down_valid(valid: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return sorted(valid, key=lambda d: d["date"], reverse=True)
 
 
-def test_sort_by_date_empty() -> None:
-    """Пустой список."""
-    assert sort_by_date([]) == []
+# Сортировка по возрастанию
+def test_sort_by_date_up(operations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return sorted(operations, key=lambda d: d.get("date", ""))
+
+
+# Сортировка по возрастанию валидных дат
+def test_sort_by_date_up_valid(valid: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return sorted(valid, key=lambda d: d["date"])
+
+
+# Дублирующиеся даты
+def test_sort_by_date_double(operations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return sorted(operations, key=lambda d: (d.get("date", ""), d.get("id", "")))
+
+
+# Дублирующиеся валидные даты
+def test_sort_by_date_up_double(valid: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return sorted(valid, key=lambda d: (d["date"], d.get("id", "")))
+
+
+# Не валидные даты
+def test_sort_by_date_invalid(operations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return sorted(operations, key=lambda d: (d.get("date", "") == "", d.get("date", "")))

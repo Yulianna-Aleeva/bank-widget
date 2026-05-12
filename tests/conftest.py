@@ -23,7 +23,7 @@ TEST_GET_MASK_CARD_NUMBER_DATA = [
 
 
 @pytest.fixture(params=TEST_GET_MASK_CARD_NUMBER_DATA)
-def get_mask_card_number_data(request: pytest.FixtureRequest) -> tuple:
+def mask_card_data(request: pytest.FixtureRequest) -> tuple:
     input_data = request.param
     expected = get_mask_card_number(input_data)
     return input_data, expected
@@ -43,7 +43,7 @@ TEST_GET_MASK_ACCOUNT_DATA = [
 
 
 @pytest.fixture(params=TEST_GET_MASK_ACCOUNT_DATA)
-def get_mask_account_data(request: pytest.FixtureRequest) -> tuple:
+def mask_account_data(request: pytest.FixtureRequest) -> tuple:
     input_data = request.param
     expected = get_mask_account(input_data)
     return input_data, expected
@@ -145,23 +145,15 @@ def filter_state(request: pytest.FixtureRequest) -> Any:
 
 
 # Расположение: src.processing
-# test_sort_by_date
+# test_sort_by_date...
 @pytest.fixture
-def sort_by_date_data() -> List[Dict[str, Any]]:
+def test_sort_by_date_data() -> List[Dict[str, Any]]:
+    """Фикстура для тестов сортировки."""
     return [
-        {"id": 414288290, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-    ]
-
-
-@pytest.fixture
-def sort_by_date_double_data() -> List[Dict[str, Any]]:
-    return [
-        {"id": 1, "date": "2019-07-03T18:35:29.512364"},
-        {"id": 2, "date": "2018-06-30T02:08:58.425572"},
-        {"id": 3, "date": "2018-09-12T21:27:25.241689"},
-        {"id": 4, "date": "2018-10-14T08:21:33.419441"},
-        {"id": 5, "date": "2019-07-03T18:35:29.512364"},
+        {"id": 1, "date": "2026-05-10"},
+        {"id": 2, "date": "2026-05-20"},
+        {"id": 3, "date": "2026-05-31"},
+        {"id": 4, "date": "2026-05-10"},
+        {"id": 5, "date": "invalid-date"},
+        {"id": 6, "date": ""},
     ]
