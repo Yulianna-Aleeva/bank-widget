@@ -9,7 +9,7 @@ def get_date(date_str: str) -> str:
     """Возвращает дату в формате "дд.мм.ГГГГ"."""
     if len(date_str) == 0 or date_str.isspace():
         return "Пустая строка."
-    # Перебор всех возможных форматов из списка констант
+    # Перебор всех возможных форматов из моего списка констант
     for format_valid in DATE_FORMATS:
         try:
             date_valid = datetime.strptime(date_str, format_valid)
