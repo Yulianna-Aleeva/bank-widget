@@ -10,4 +10,4 @@ def filter_by_state(operations: List[Dict[str, Any]], state: str = "EXECUTED") -
 
 def sort_by_date(operations: List[Dict[str, Any]], reverse: bool = True) -> List[Dict[str, Any]]:
     """Возвращает список, отсортированный по дате."""
-    return sorted(operations, key=lambda x: x["date"], reverse=reverse)
+    return sorted(operations, key=lambda d: d.get("date", ""), reverse=reverse)
