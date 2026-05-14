@@ -165,3 +165,12 @@ def sort_by_date_double_data() -> List[Dict[str, Any]]:
         {"id": 4, "date": "2018-10-14T08:21:33.419441"},
         {"id": 5, "date": "2019-07-03T18:35:29.512364"},
     ]
+
+
+@pytest.fixture
+def sample_transactions() -> List[Dict[str, Any]]:
+    return [
+        {"id": 939719570, "operationAmount": {"currency": {"code": "USD"}}, "description": "Перевод организации"},
+        {"id": 142264268, "operationAmount": {"currency": {"code": "USD"}}, "description": "Перевод со счета на счет"},
+        {"id": 873106923, "operationAmount": {"currency": {"code": "RUB"}}, "description": "Перевод со счета на счет"},
+    ]
