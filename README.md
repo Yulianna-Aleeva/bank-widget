@@ -15,52 +15,52 @@
 
 ## Установка:
 
-1. Клонируйте репозиторий:  
+1. Клонируйте репозиторий:
 >git clone git@github.com:Yulianna-Aleeva/bank-widget.git
-2. Перейдите в папку проекта:  
+2. Перейдите в папку проекта:
 >cd bank-widget
-3. Установите зависимости:  
+3. Установите зависимости:
 >poetry install
 
 
 ## Примеры использования:
 
-Запустите файл `main.py` с примерами:  
+Запустите файл `main.py` с примерами:
 >poetry run python main.py
 
-* Маскировка данных:  
->print(mask_account_card("Visa Platinum 7000792289606361"))  
->>Visa Platinum 7000 79** **** 6361  
->print(mask_account_card("Счет 73654108430135874305"))  
+* Маскировка данных:
+>print(mask_account_card("Visa Platinum 7000792289606361"))
+>>Visa Platinum 7000 79** **** 6361
+>print(mask_account_card("Счет 73654108430135874305"))
 >>Счет **874305
 
-* Вывод дат:  
->print(get_date("2024-03-11T02:26:18.671407"))  
+* Вывод дат:
+>print(get_date("2024-03-11T02:26:18.671407"))
 >>11.03.2024
 
-* Фильтр по статусу:  
->print(filter_by_state(`__*operations*__`, state='EXECUTED'))  
+* Фильтр по статусу:
+>print(filter_by_state(`__*operations*__`, state='EXECUTED'))
 >>[{'id': 414288290, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'}, {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'}]
 
-* Сортировка по дате:  
->print(sort_by_date(`__*operations*__`))  
+* Сортировка по дате:
+>print(sort_by_date(`__*operations*__`))
 >>[{'id': 414288290, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'}, {'id': 615064591, 'state': 'CANCELED', 'date': '2018-10-14T08:21:33.419441'}, {'id': 594226727, 'state': 'CANCELED', 'date': '2018-09-12T21:27:25.241689'}, {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'}]
 
-* Фильтр по валюте:  
->print(next(usd_transactions))  
+* Фильтр по валюте:
+>print(next(usd_transactions))
 >>{'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572', 'operationAmount': {'amount': '9824.07', 'currency': {'name': 'USD', 'code': 'USD'}}, 'description': 'Перевод организации', 'from': 'Счет 75106830613657916952', 'to': 'Счет 11776614605963066702'}  
 {'id': 142264268, 'state': 'EXECUTED', 'date': '2019-04-04T23:20:05.206878', 'operationAmount': {'amount': '79114.93', 'currency': {'name': 'USD', 'code': 'USD'}}, 'description': 'Перевод со счета на счет', 'from': 'Счет 19708645243227258542', 'to': 'Счет 75651667383060284188'}
 
-* Вывод описания операций:  
->print(next(descriptions))  
+* Вывод описания операций:
+>print(next(descriptions))
 >>Перевод организации  
 Перевод со счета на счет  
 Перевод со счета на счет  
 Перевод с карты на карту  
 Перевод организации
 
-* Генерация номеров карт:  
->print(card_number)  
+* Генерация номеров карт:
+>print(card_number)
 >>0000 0000 0000 0001  
 0000 0000 0000 0002  
 0000 0000 0000 0003  
@@ -71,39 +71,41 @@
 ## Тестирование функций:
 
 ### [test_masks](tests/test_masks.py) для [masks](src/masks.py)
-`get_mask_card_number` и `get_mask_account`  
+`get_mask_card_number` и `get_mask_account`
 
-Маскировки:  
+Маскировки:
 * Стандартный ввод;
 * Нестандартный ввод;
 * Граничный ввод;
 * Ввод некорректных данных.
 
 ### [test_widget](tests/test_widget.py) для [widget](src/widget.py)
-`mask_account_card` и `get_date`  
+`mask_account_card` и `get_date`
 
-Обработки виджетов:  
+Обработки виджетов:
 * Автоопределение типа (карта/счет);
 * Различные форматы и длины строк;
 * Преобразование дат;
 * Пустые строки и некорректный ввод.
 
 ### [test_processing](tests/test_processing.py) для [processing](src/processing.py)
-`filter_by_state` и `sort_by_date`  
+`filter_by_state` и `sort_by_date`
 
-Фильтрации и сортировки:  
+Фильтрации и сортировки:
 * Фильтрация по существующим и отсутствующим статусам;
 * Сортировка по возрастанию и убыванию;
 * Стабильность сортировки при дубликатах;
 * Обработка пустых списков.
 
 ### [test_generators](tests/test_generators.py) для [generators](src/generators.py)
-`filter_by_currency`, `transaction_descriptions` и `card_number_generator`    
+`filter_by_currency`, `transaction_descriptions` и `card_number_generator`
 
-Работы генераторов с транзакциями:  
+Работы генераторов с транзакциями:
 * Проверка фильтрации по валюте, возврат пустого списка при отсутствии данных.
 * Возврат корректных описаний операций, работа с пустым списком.
 * Генерация номеров карт в заданном формате и диапазоне, граничные случаи.
+
+### [test_decorators](tests/test_decorators.py) для [decorators](src/decorators.py)
 
 
 ## Лицензия:
