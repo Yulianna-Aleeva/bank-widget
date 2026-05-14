@@ -25,6 +25,9 @@ mypy = ">=1.20.0,<2.0.0"
 pytest = "^9.0.3"
 pytest-cov = "^7.1.0"
 datetime = "^6.0"
+isort = "^8.0.1"
+flake8 = "^7.3.0"
+flake8-bugbear = "^25.11.29"
 
 [tool.black]
 line-length = 119
