@@ -39,9 +39,20 @@ def test_convert_to_rub_already_rub(mock_get: Mock) -> None:
 @patch("src.external_api.requests.get")
 def test_convert_to_rub_usd(mock_get: Mock) -> None:
     mock_response = Mock()
-    mock_response.json.return_value = {"rates": {"RUB": 9000.0}}
+    mock_response.json.return_value = {"result": 9000.0}
     mock_get.return_value = mock_response
 
     transaction = {"operationAmount": {"amount": "100", "currency": {"code": "USD"}}}
     assert convert_to_rub(transaction) == 9000.0
+    mock_get.assert_called_once()
+
+
+@patch("src.external_api.requests.get")
+def test_convert_to_rub_eur(mock_get: Mock) -> None:
+    mock_response = Mock()
+    mock_response.json.return_value = {"result": 105.0}
+    mock_get.return_value = mock_response
+
+    transaction = {"operationAmount": {"amount": "100", "currency": {"code": "EUR"}}}
+    assert convert_to_rub(transaction) == 105.0
     mock_get.assert_called_once()

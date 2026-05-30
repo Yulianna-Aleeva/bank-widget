@@ -1,4 +1,10 @@
+from typing import TypedDict
+
 import requests
+
+
+class ApiResponse(TypedDict):
+    result: float
 
 
 def convert_to_rub(transaction: dict) -> float:
@@ -9,15 +15,28 @@ def convert_to_rub(transaction: dict) -> float:
     if currency_code == "RUB":
         return amount
 
-    url = f"https://api.frankfurter.app/latest?amount={amount}&from={currency_code}&to=RUB"
+    url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from={currency_code}&amount={amount}"
 
-    response = requests.get(url)
+    headers = {"apikey": "hSduqg7Z128RUH3eYgwCajeYlrYx43JS"}
 
-    from typing import TypedDict
+    response = requests.get(url, headers=headers)  # type: ignore
+    data: ApiResponse = response.json()  # Используем аннотацию для ответа
 
-    class ApiResponse(TypedDict):
-        rates: dict[str, float]
+    return data["result"]
 
-    data: ApiResponse = response.json()
 
-    return data["rates"]["RUB"]
+# Мой бесплатный вариант без регистрации и блокировок
+# import requests
+# def convert_to_rub(transaction: dict) -> float:
+#     """Конвертирует сумму транзакции в рубли."""
+#     amount = float(transaction["operationAmount"]["amount"])
+#     currency_code = transaction["operationAmount"]["currency"]["code"]
+#     if currency_code == "RUB":
+#         return amount
+#     url = f"https://api.frankfurter.app/latest?amount={amount}&from={currency_code}&to=RUB"
+#     response = requests.get(url)
+#     from typing import TypedDict
+#     class ApiResponse(TypedDict):
+#         rates: dict[str, float]
+#     data: ApiResponse = response.json()
+#     return data["rates"]["RUB"]
