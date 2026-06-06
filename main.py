@@ -1,12 +1,24 @@
+import logging
+
 from src.generators import card_number_generator
 from src.generators import filter_by_currency
 from src.generators import transaction_descriptions
 from src.processing import filter_by_state
 from src.processing import sort_by_date
+from src.utils import load_transactions_from_json
 from src.widget import get_date
 from src.widget import mask_account_card
 
+# Настройка общего логирования для проекта в файл logs.log
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(name)s %(levelname)s: %(message)s",
+    filename="logs.log",
+    filemode="w",
+    encoding="utf-8",
+)
 if __name__ == "__main__":
+    load_transactions_from_json("data/operations.json")
     print(mask_account_card("Visa Platinum 7000792289606361"))
     print(mask_account_card("Счет 73654108430135874305"))
     print(get_date("2024-03-11T02:26:18.671407"))
