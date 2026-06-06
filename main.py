@@ -9,6 +9,7 @@ from src.utils import load_transactions_from_json
 from src.widget import get_date
 from src.widget import mask_account_card
 
+# Настройка общего логирования для проекта в файл logs.log
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s %(name)s %(levelname)s: %(message)s",

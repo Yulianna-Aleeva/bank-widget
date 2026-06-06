@@ -1,15 +1,13 @@
 import logging
 import string
 
+# Настройка логирования для модуля src.masks
 logger = logging.getLogger("src.masks")
 logger.setLevel(logging.DEBUG)
-
 file_handler = logging.FileHandler("logs/masks.log", mode="w", encoding="utf-8")
 file_handler.setLevel(logging.DEBUG)
-
 file_formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s: %(message)s")
 file_handler.setFormatter(file_formatter)
-
 logger.addHandler(file_handler)
 
 

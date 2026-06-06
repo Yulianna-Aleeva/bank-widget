@@ -4,6 +4,7 @@ from typing import Dict
 from typing import List
 from typing import Union
 
+# Настройка логирования для модуля src.utils
 logger = logging.getLogger("src.utils")
 logger.setLevel(logging.DEBUG)
 file_handler = logging.FileHandler("logs/utils.log", mode="w", encoding="utf-8")
