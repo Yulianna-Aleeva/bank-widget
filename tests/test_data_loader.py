@@ -12,7 +12,7 @@ from src.data_loader import load_transactions
 
 @pytest.fixture(scope="module")
 def csv_sample_data() -> List[Dict[str, str]]:
-    """Данные из реального CSV."""
+    """Данные из CSV-файла "transactions.cvs"."""
     return [
         {
             "id": "650703",
@@ -41,7 +41,7 @@ def csv_sample_data() -> List[Dict[str, str]]:
 
 @pytest.fixture(scope="module")
 def excel_sample_data() -> List[Dict[str, str]]:
-    """Данные из реального Excel."""
+    """Данные из Excel-файла "transactions_excel.xlsx"."""
     return [
         {
             "id": "632926",
@@ -88,14 +88,14 @@ def test_loading_non_existing_file(tmp_path: Path) -> None:
     """Проверяет, что функция поднимает ошибку, если файла нет."""
     missing_csv = tmp_path / "nonexistent.csv"
     missing_xlsx = tmp_path / "nonexistent.xlsx"
-
     with pytest.raises(FileNotFoundError):
         load_transactions(str(missing_csv))
-
     with pytest.raises(FileNotFoundError):
         load_transactions(str(missing_xlsx))
 
 
 def test_invalid_extension() -> None:
-    with pytest.raises(ValueError):
-        load_transactions("data.txt")
+    """Проверяет, что загрузка файла с недопустимым расширением вызывает исключение."""
+    with pytest.raises(ValueError) as exc_info:
+        load_transactions("transactions.txt")
+    assert str(exc_info.value) == "Формат файла не поддерживается: transactions.txt"

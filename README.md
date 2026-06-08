@@ -16,7 +16,7 @@
 * Логирование вызовов функций:
   * Автоматическая регистрация деталей выполнения функций в консоль и в файл:
     * Время вызова, имя, аргументы, результат или ошибку.
-* Поддержка форматов данных JSON, CSV и Excel (*.xlsx):
+* Поддержка форматов данных JSON, CSV и Excel (*.xlsx, *.xls):
   * Автоматическое распознание расширений и загрузка транзакций.
 
 ## Установка:
@@ -37,6 +37,7 @@
 * Маскировка данных:
 >print(mask_account_card("Visa Platinum 7000792289606361"))
 >>Visa Platinum 7000 79** **** 6361
+
 >print(mask_account_card("Счет 73654108430135874305"))
 >>Счет **874305
 
@@ -72,6 +73,13 @@
 0000 0000 0000 0003  
 0000 0000 0000 0004  
 0000 0000 0000 0005
+
+* Вывод транзакций из файла:
+>print("\n📊 Данные из CSV:", load_transactions("data/transactions.csv")[:2])
+>>📊 Данные из CSV: [{'id': '650703', 'state': 'EXECUTED', 'date': '2023-09-05T11:30:32Z', 'amount': '16210', 'currency_name': 'Sol', 'currency_code': 'PEN', 'from': 'Счет 58803664561298323391', 'to': 'Счет 39745660563456619397', 'description': 'Перевод организации'}, {'id': '3598919', 'state': 'EXECUTED', 'date': '2020-12-06T23:00:58Z', 'amount': '29740', 'currency_name': 'Peso', 'currency_code': 'COP', 'from': 'Discover 3172601889670065', 'to': 'Discover 0720428384694643', 'description': 'Перевод с карты на карту'}]  
+
+>print("\n📊 Данные из Excel:", load_transactions("data/transactions_excel.xlsx")[:2])
+>>📊 Данные из Excel: [{'id': '650703', 'state': 'EXECUTED', 'date': '2023-09-05T11:30:32Z', 'amount': '16210', 'currency_name': 'Sol', 'currency_code': 'PEN', 'from': 'Счет 58803664561298323391', 'to': 'Счет 39745660563456619397', 'description': 'Перевод организации'}, {'id': '3598919', 'state': 'EXECUTED', 'date': '2020-12-06T23:00:58Z', 'amount': '29740', 'currency_name': 'Peso', 'currency_code': 'COP', 'from': 'Discover 3172601889670065', 'to': 'Discover 0720428384694643', 'description': 'Перевод с карты на карту'}]
 
 
 ## Тестирование функций:
