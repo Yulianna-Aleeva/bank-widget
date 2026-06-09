@@ -14,8 +14,10 @@
 * Конвертация валют:
   * Перевод сумм в рубли через API из USD и EUR.
 * Логирование вызовов функций:
-  * Автоматически регистрирует детали выполнения функций в консоль и в файл (время вызова, имя, аргументы, результат или ошибку).
-
+  * Автоматическая регистрация деталей выполнения функций в консоль и в файл:
+    * Время вызова, имя, аргументы, результат или ошибку.
+* Поддержка форматов данных JSON, CSV и Excel (*.xlsx, *.xls):
+  * Автоматическое распознание расширений и загрузка транзакций.
 
 ## Установка:
 
@@ -35,6 +37,7 @@
 * Маскировка данных:
 >print(mask_account_card("Visa Platinum 7000792289606361"))
 >>Visa Platinum 7000 79** **** 6361
+
 >print(mask_account_card("Счет 73654108430135874305"))
 >>Счет **874305
 
@@ -70,6 +73,13 @@
 0000 0000 0000 0003  
 0000 0000 0000 0004  
 0000 0000 0000 0005
+
+* Вывод транзакций из файла:
+>print("\n📊 Данные из CSV:", load_transactions("data/transactions.csv")[:2])
+>>📊 Данные из CSV: [{'id': '650703', 'state': 'EXECUTED', 'date': '2023-09-05T11:30:32Z', 'amount': '16210', 'currency_name': 'Sol', 'currency_code': 'PEN', 'from': 'Счет 58803664561298323391', 'to': 'Счет 39745660563456619397', 'description': 'Перевод организации'}, {'id': '3598919', 'state': 'EXECUTED', 'date': '2020-12-06T23:00:58Z', 'amount': '29740', 'currency_name': 'Peso', 'currency_code': 'COP', 'from': 'Discover 3172601889670065', 'to': 'Discover 0720428384694643', 'description': 'Перевод с карты на карту'}]  
+
+>print("\n📊 Данные из Excel:", load_transactions("data/transactions_excel.xlsx")[:2])
+>>📊 Данные из Excel: [{'id': '650703', 'state': 'EXECUTED', 'date': '2023-09-05T11:30:32Z', 'amount': '16210', 'currency_name': 'Sol', 'currency_code': 'PEN', 'from': 'Счет 58803664561298323391', 'to': 'Счет 39745660563456619397', 'description': 'Перевод организации'}, {'id': '3598919', 'state': 'EXECUTED', 'date': '2020-12-06T23:00:58Z', 'amount': '29740', 'currency_name': 'Peso', 'currency_code': 'COP', 'from': 'Discover 3172601889670065', 'to': 'Discover 0720428384694643', 'description': 'Перевод с карты на карту'}]
 
 
 ## Тестирование функций:
@@ -117,17 +127,17 @@
 * Возникновение исключения (логируется тип ошибки и входные параметры).
 
 ### [test_utils_and_external_api](tests/test_utils_and_external_api.py) для [utils](src/utils.py) & [external_api](src/external_api.py)
-`test_load_transactions_success`, `test_load_file_not_found`, `test_load_invalid_json`,  
-`test_load_not_a_list`, `test_convert_to_rub_already_rub` и `test_convert_to_rub_usd`
-
-Чтение JSON:
-* Успешная загрузка данных из файла.
-* Обработка ошибок, если файл не найден или неверный формат.
-* Проверка возврата пустого списка, если данные в файле — не список.
+`test_load_transactions_success`, `test_load_file_not_found`, `test_load_invalid_json`, `test_load_not_a_list`,  
+`test_convert_to_rub_already_rub`, `test_convert_to_rub_usd`, `test_load_csv` и `test_load_excel`
 
 Конвертация валют:
 * Логика работы без запроса к API, если валюта уже в рублях.
 * Проверка конвертации USD/EUR -> RUB через обращение к внешнему API (APILayer).
+
+Чтение и загрузка JSON, CSV, Excel:
+* Успешная загрузка данных из файла.
+* Обработка ошибок, если файл не найден или неверный формат.
+* Проверка возврата пустого списка, если данные в файле — не список.
 
 
 ## Лицензия:

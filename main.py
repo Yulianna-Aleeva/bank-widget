@@ -1,5 +1,6 @@
 import logging
 
+from src.data_loader import load_transactions
 from src.generators import card_number_generator
 from src.generators import filter_by_currency
 from src.generators import transaction_descriptions
@@ -105,3 +106,55 @@ for _ in range(5):
 
 for card_number in card_number_generator(1, 5):
     print(card_number)
+
+
+transactions_loads = [
+    {
+        "id": "650703",
+        "state": "EXECUTED",
+        "date": "2023-09-05T11:30:32Z",
+        "amount": "16210",
+        "currency_name": "Sol",
+        "currency_code": "PEN",
+        "from": "Счет 58803664561298323391",
+        "to": "Счет 39745660563456619397",
+        "description": "Перевод организации",
+    },
+    {
+        "id": "3598919",
+        "state": "EXECUTED",
+        "date": "2020-12-06T23:00:58Z",
+        "amount": "29740",
+        "currency_name": "Peso",
+        "currency_code": "COP",
+        "from": "Discover 3172601889670065",
+        "to": "Discover 0720428384694643",
+        "description": "Перевод с карты на карту",
+    },
+    {
+        "id": "632926",
+        "state": "PENDING",
+        "date": "2021-11-27T00:46:09Z",
+        "amount": "29553",
+        "currency_name": "Yuan Renminbi",
+        "currency_code": "CNY",
+        "from": "American Express 6477627838877562",
+        "to": "Счет 88381741644903346269",
+        "description": "Перевод организации",
+    },
+    {
+        "id": "1539387",
+        "state": "EXECUTED",
+        "date": "2023-07-29T18:13:23Z",
+        "amount": "13130",
+        "currency_name": "Real",
+        "currency_code": "BRL",
+        "from": "American Express 9646246622784373",
+        "to": "American Express 2760544280145973",
+        "description": "Перевод с карты на карту",
+    },
+]
+
+
+print("\n📊 Данные из CSV:", load_transactions("data/transactions.csv")[:2])
+print("\n📊 Данные из Excel:", load_transactions("data/transactions_excel.xlsx")[:2])
