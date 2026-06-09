@@ -6,7 +6,9 @@ logger = logging.getLogger(__name__)
 
 
 def load_transactions(file_path: str) -> list[dict]:
-    """Читает транзакции из CSV или Excel."""
+    """Читает транзакции из файлов CSV или Excel.
+    Args: Принимает путь к файлу, определяет формат.
+    Returns: Список транзакций в виде словаря."""
     logger.debug(f"Чтение файла: {file_path}")
     lower_file_path = file_path.lower()
     if lower_file_path.endswith(".csv"):
