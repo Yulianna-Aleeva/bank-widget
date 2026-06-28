@@ -1,10 +1,7 @@
 import atexit
 import logging
 from functools import wraps
-from typing import Any
-from typing import Callable
-from typing import Dict
-from typing import Optional
+from typing import Any, Callable, Dict, Optional
 
 # Словарь для хранения созданных обработчиков
 _handlers: Dict[Optional[str], Any] = {}

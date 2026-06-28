@@ -1,6 +1,5 @@
 from pathlib import Path
-from unittest.mock import Mock
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from src.external_api import convert_to_rub
 from src.utils import load_transactions_from_json

@@ -39,7 +39,8 @@ target-version = ["py310"]
 
 [tool.isort]
 line_length = 119
-force_single_line = true
+#force_single_line = true  # разделяет
+combine_as_imports = true  # объединяет
 float_to_top = true
 profile = "black"
 
