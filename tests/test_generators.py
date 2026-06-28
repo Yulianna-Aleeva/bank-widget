@@ -1,18 +1,16 @@
-from typing import Any
-from typing import Dict
-from typing import List
+from typing import Any, Dict, List
 
 import pytest
 
-from src.generators import card_number_generator
-from src.generators import filter_by_currency
-from src.generators import transaction_descriptions
+from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
+
+OperationsList = List[Dict[str, Any]]
 
 
 # Тесты для filter_by_currency
 # Запуск: pytest -k test_filter_by_currency
 @pytest.mark.parametrize("currency, expected_count", [("USD", 2), ("RUB", 1), ("EUR", 0)])
-def test_filter_by_currency(sample_transactions: List[Dict[str, Any]], currency: str, expected_count: int) -> None:
+def test_filter_by_currency(sample_transactions: OperationsList, currency: str, expected_count: int) -> None:
     result = list(filter_by_currency(sample_transactions, currency))
     assert len(result) == expected_count
 
@@ -24,7 +22,7 @@ def test_filter_by_currency_empty() -> None:
 
 # Тесты для transaction_descriptions
 # Запуск: pytest -k test_transaction_descriptions
-def test_transaction_descriptions(sample_transactions: List[Dict[str, Any]]) -> None:
+def test_transaction_descriptions(sample_transactions: OperationsList) -> None:
     descriptions = list(transaction_descriptions(sample_transactions))
     assert descriptions == ["Перевод организации", "Перевод со счета на счет", "Перевод со счета на счет"]
 

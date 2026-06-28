@@ -1,14 +1,10 @@
 import logging
 
 from src.data_loader import load_transactions
-from src.generators import card_number_generator
-from src.generators import filter_by_currency
-from src.generators import transaction_descriptions
-from src.processing import filter_by_state
-from src.processing import sort_by_date
+from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
+from src.processing import filter_by_state, process_bank_search, sort_by_date
 from src.utils import load_transactions_from_json
-from src.widget import get_date
-from src.widget import mask_account_card
+from src.widget import get_date, mask_account_card
 
 # Настройка общего логирования для проекта в файл logs.log
 logging.basicConfig(
@@ -96,7 +92,7 @@ transactions = [
 
 usd_transactions = filter_by_currency(transactions, "USD")
 for _ in range(2):
-    print(next(usd_transactions))
+    print(next(iter(usd_transactions)))
 
 
 descriptions = transaction_descriptions(transactions)
@@ -158,3 +154,96 @@ transactions_loads = [
 
 print("\n📊 Данные из CSV:", load_transactions("data/transactions.csv")[:2])
 print("\n📊 Данные из Excel:", load_transactions("data/transactions_excel.xlsx")[:2])
+
+
+def main() -> None:
+    """Основная функция программы."""
+
+    file_map = {
+        "1": ("data/operations.json", "JSON"),
+        "2": ("data/transactions.csv", "CSV"),
+        "3": ("data/transactions_excel.xlsx", "XLSX"),
+    }
+
+    print("Привет! Добро пожаловать в программу работы с банковскими транзакциями.")
+
+    while True:
+        print("\nВыберите необходимый пункт меню:")
+        for key, value in file_map.items():
+            print(f"{key}. Получить информацию о транзакциях из {value[1]}-файла")
+
+        file_choice = input()
+
+        if file_choice in file_map:
+            file_path, file_type = file_map[file_choice]
+            print(f"Для обработки выбран {file_type}-файл.\n")
+            break
+
+    file_transactions = load_transactions(file_path)
+
+    for transaction in file_transactions:
+        transaction["date"] = get_date(transaction.get("date", ""))
+
+    valid_statuses = ["EXECUTED", "CANCELED", "PENDING"]
+
+    while True:
+        status_choice = input(f"Введите статус для фильтрации.\nДоступные: {', '.join(valid_statuses)}\n").strip()
+        if status_choice.upper() in valid_statuses:
+            print(f'\nОперации отфильтрованы по статусу "{status_choice}".')
+            break
+        print(f'\nСтатус операции "{status_choice}" недоступен.\n')
+
+    file_transactions = filter_by_state(file_transactions, status_choice)
+
+    while True:
+        sort_choice = input("\nОтсортировать операции по дате? Да/Нет\n").strip().lower()
+        if sort_choice in ["да", "нет"]:
+            break
+
+    if sort_choice == "да":
+        while True:
+            order_choice = input("\nОтсортировать по возрастанию или по убыванию?\n").strip().lower()
+            if order_choice in ["по возрастанию", "по убыванию"]:
+                reverse = order_choice == "по убыванию"
+                file_transactions = sort_by_date(file_transactions, reverse)
+                break
+
+    while True:
+        currency_choice = input("\nВыводить только рублевые транзакции? Да/Нет\n").strip().lower()
+        if currency_choice in ["да", "нет"]:
+            break
+
+    if currency_choice == "да":
+        file_transactions = filter_by_currency(file_transactions, "RUB")
+
+    while True:
+        search_input = (
+            input("\nОтфильтровать список транзакций по определённому слову в описании? Да/Нет\n").strip().lower()
+        )
+        if search_input in ["да", "нет"]:
+            break
+
+    if search_input == "да":
+        keyword_choice = input("\nВведите ключевое слово: ").strip()
+        file_transactions = process_bank_search(file_transactions, keyword_choice)
+
+    if not file_transactions:
+        print("\nНе найдено ни одной транзакции, подходящей под ваши условия фильтрации.")
+        return
+
+    else:
+        print("\nРаспечатываю итоговый список транзакций...")
+        print(f"\nВсего банковских операций в выборке: {len(file_transactions)}\n")
+
+        for transaction in file_transactions:
+            print(f"{transaction['date']} {transaction['description']}")
+            print(f"{mask_account_card(transaction['from'])} -> {mask_account_card(transaction['to'])}")
+            print(
+                f"Сумма: {transaction['operationAmount']['amount']} "
+                f"{transaction['operationAmount']['currency']['code']}"
+            )
+            print()
+
+
+if __name__ == "__main__":
+    main()

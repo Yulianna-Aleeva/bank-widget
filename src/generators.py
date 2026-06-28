@@ -1,17 +1,19 @@
-from typing import Any
-from typing import Dict
-from typing import Iterator
-from typing import List
+from typing import Any, Dict, Iterator, List
+
+OperationsList = List[Dict[str, Any]]
 
 
-def filter_by_currency(transactions: List[Dict[str, Any]], currency: str) -> Iterator[Dict[str, Any]]:
-    """Фильтрует транзакции по заданной валюте."""
-    for transaction in transactions:
-        if transaction.get("operationAmount", {}).get("currency", {}).get("code") == currency:
-            yield transaction
+def filter_by_currency(transactions: OperationsList, currency: str) -> OperationsList:
+    """Фильтрует транзакции по заданной валюте и возвращает список."""
+    return [
+        transaction
+        for transaction in transactions
+        if transaction.get("operationAmount", {}).get("currency", {}).get("code") == currency
+    ]
+    # yield transaction
 
 
-def transaction_descriptions(transactions: List[Dict[str, Any]]) -> Iterator[str]:
+def transaction_descriptions(transactions: OperationsList) -> Iterator[str]:
     """Генератор описаний транзакций."""
     for transaction in transactions:
         yield transaction.get("description", "")

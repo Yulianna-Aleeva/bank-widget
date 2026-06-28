@@ -1,8 +1,8 @@
 import json
 import logging
-from typing import Dict
-from typing import List
-from typing import Union
+from typing import Any, Dict, List, Union
+
+OperationsList = List[Dict[str, Any]]
 
 # Настройка логирования для модуля src.utils
 logger = logging.getLogger("src.utils")
@@ -22,7 +22,7 @@ def load_transactions_from_json(file_path: str) -> List[Dict[str, Union[str, int
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
             if isinstance(data, list):
-                logger.info(f"Успешно загружено {len(data)} транзакций.")
+                logger.info(f"Загружено транзакций: {len(data)}.")
                 return data
             else:
                 logger.error("Данные в файле не являются списком.")
@@ -31,5 +31,5 @@ def load_transactions_from_json(file_path: str) -> List[Dict[str, Union[str, int
         logger.error(f"Файл '{file_path}' не найден.")
         return []
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON в файле '{file_path}'. Причина: {e}")
+        logger.error(f"Ошибка декодирования JSON в файле '{file_path}'.\nПричина: {e}")
         return []

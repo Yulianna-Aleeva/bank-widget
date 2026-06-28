@@ -1,13 +1,12 @@
 from datetime import datetime
 
 from constants import DATE_FORMATS
-from src.masks import get_mask_account
-from src.masks import get_mask_card_number
+from src.masks import get_mask_account, get_mask_card_number
 
 
 def get_date(date_str: str) -> str:
     """Возвращает дату в формате "дд.мм.ГГГГ"."""
-    if len(date_str) == 0 or date_str.isspace():
+    if not date_str or date_str.isspace():
         return "Пустая строка."
     # Перебор всех возможных форматов из списка констант
     for format_valid in DATE_FORMATS:
@@ -21,7 +20,7 @@ def get_date(date_str: str) -> str:
 
 def mask_account_card(bank_number: str) -> str:
     """Возвращает маскированные счёт или карту."""
-    if len(bank_number) == 0 or bank_number.isspace():
+    if not bank_number or bank_number.isspace():
         return "Данные отсутствуют."
     try:
         name, number = bank_number.rsplit(" ", 1)
