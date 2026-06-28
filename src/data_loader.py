@@ -50,40 +50,44 @@ def load_transactions(file_path: str) -> OperationsList:
                     elif isinstance(data, dict):
                         return [_normalize_row(data)]
                     else:
-                        logger.error(f"Неожиданный формат данных в JSON-файле: {type(data)}")
+                        logger.error(f"Неожиданный формат данных в JSON-файле: {type(data)}.")
                         return []
             except (FileNotFoundError, json.JSONDecodeError) as e:
-                logger.error(f"Ошибка при чтении JSON-файла '{file_path}': {e}")
+                logger.error(f"Ошибка при чтении JSON-файла '{file_path}': {e}.")
                 return []
 
         elif file_path.lower().endswith(".csv"):
             try:
-                df = pd.read_csv(
-                    file_path,
-                    sep=";",
-                    dtype=str,
-                    encoding='utf-8',
-                    engine='python',
-                    quoting=3
-                )
+                df = pd.read_csv(file_path, sep=None, dtype=str, encoding="utf-8", engine="python", quoting=3)
+                df = df.fillna("")
 
-                if not df.columns.tolist() == [
-                    "id", "state", "date", "amount",
-                    "currency_name", "currency_code",
-                    "from", "to", "description"
-                ]:
-                    raise ValueError("Некорректные заголовки в CSV файле")
+                required_columns = {
+                    "id",
+                    "state",
+                    "date",
+                    "amount",
+                    "currency_name",
+                    "currency_code",
+                    "from",
+                    "to",
+                    "description",
+                }
+                actual_columns_lower = {col.strip().lower() for col in df.columns}
+
+                if not required_columns.issubset(actual_columns_lower):
+                    missing_cols = required_columns - actual_columns_lower
+                    logger.error(f"Отсутствуют обязательные столбцы в CSV-файле: {missing_cols}.")
+                    return []
 
                 raw_data = [
-                    {str(k): v.strip() if isinstance(v, str) else v
-                     for k, v in row.items()}
+                    {str(k): v.strip() if isinstance(v, str) else v for k, v in row.items()}
                     for row in df.to_dict(orient="records")
                 ]
 
                 return [_normalize_row(row) for row in raw_data]
 
             except Exception as e:
-                logger.error(f"Ошибка при чтении CSV-файла '{file_path}': {e}")
+                logger.error(f"Ошибка при чтении CSV-файла '{file_path}': {e}.")
                 return []
 
         else:
@@ -96,12 +100,12 @@ def load_transactions(file_path: str) -> OperationsList:
                 ]
                 return [_normalize_row(row) for row in raw_data]
             except Exception as e:
-                logger.error(f"Ошибка при чтении Excel-файла '{file_path}': {e}")
+                logger.error(f"Ошибка при чтении Excel-файла '{file_path}': {e}.")
                 return []
 
     except FileNotFoundError as e:
-        logger.error(f"Файл '{file_path}' не найден: {e}")
+        logger.error(f"Файл '{file_path}' не найден: {e}.")
         return []
     except Exception as e:
-        logger.error(f"Критическая ошибка при чтении файла '{file_path}': {e}")
+        logger.error(f"Критическая ошибка при чтении файла '{file_path}': {e}.")
         return []
