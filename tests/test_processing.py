@@ -1,11 +1,10 @@
-from typing import Any
-from typing import Dict
-from typing import List
+from typing import Any, Dict, List
 
 import pytest
 
-from src.processing import filter_by_state
-from src.processing import sort_by_date
+from src.processing import filter_by_state, sort_by_date
+
+OperationsList = List[Dict[str, Any]]
 
 
 # Тесты для test_filter_by_state
@@ -27,7 +26,7 @@ def test_filter_by_state_parametrize(state: str) -> None:
 
 
 # Запуск: pytest -k test_filter_by_state
-def test_filter_by_state(operations_data: List[Dict[str, Any]], filter_state: str) -> None:
+def test_filter_by_state(operations_data: OperationsList, filter_state: str) -> None:
     result_filtered = filter_by_state(operations_data, state=filter_state)
     state_exists = any(item.get("state") == filter_state for item in operations_data)
     if state_exists:
@@ -53,15 +52,13 @@ def test_filter_by_state(operations_data: List[Dict[str, Any]], filter_state: st
         ([], True, []),
     ],
 )
-def test_sort_by_date_parametrize(
-    operations: List[Dict[str, Any]], reverse: bool, expected: List[Dict[str, Any]]
-) -> None:
+def test_sort_by_date_parametrize(operations: OperationsList, reverse: bool, expected: OperationsList) -> None:
     result = sort_by_date(operations, reverse)
     assert sorted(result, key=lambda x: str(x)) == sorted(expected, key=lambda x: str(x))
 
 
 # Запуск: pytest -k test_sort_by_date_descending
-def test_sort_by_date_descending(sort_by_date_data: List[Dict[str, Any]]) -> None:
+def test_sort_by_date_descending(sort_by_date_data: OperationsList) -> None:
     """Проверка сортировки по убыванию."""
     result = sort_by_date(sort_by_date_data)
     dates = [item["date"] for item in result]
@@ -69,7 +66,7 @@ def test_sort_by_date_descending(sort_by_date_data: List[Dict[str, Any]]) -> Non
 
 
 # Запуск: pytest -k test_sort_by_date_ascending
-def test_sort_by_date_ascending(sort_by_date_data: List[Dict[str, Any]]) -> None:
+def test_sort_by_date_ascending(sort_by_date_data: OperationsList) -> None:
     """Проверка сортировки по возрастанию."""
     result = sort_by_date(sort_by_date_data, reverse=False)
     dates = [item["date"] for item in result]
@@ -77,7 +74,7 @@ def test_sort_by_date_ascending(sort_by_date_data: List[Dict[str, Any]]) -> None
 
 
 # Запуск: pytest -k test_sort_by_date_double
-def test_sort_by_date_double(sort_by_date_double_data: List[Dict[str, Any]]) -> None:
+def test_sort_by_date_double(sort_by_date_double_data: OperationsList) -> None:
     """Проверка дубликатов и сохранения списка."""
     result = sort_by_date(sort_by_date_double_data)
     all_dates = [d["date"] for d in result]

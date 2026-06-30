@@ -1,13 +1,15 @@
-from typing import Any
-from typing import Dict
-from typing import List
+import json
+import tempfile
+from pathlib import Path
+from typing import Any, Dict, List
 
+import pandas as pd
 import pytest
 
-from src.masks import get_mask_account
-from src.masks import get_mask_card_number
-from src.widget import get_date
-from src.widget import mask_account_card
+from src.masks import get_mask_account, get_mask_card_number
+from src.widget import get_date, mask_account_card
+
+OperationsList = List[Dict[str, Any]]
 
 # Расположение: src.masks.py
 TEST_GET_MASK_CARD_NUMBER_DATA = [
@@ -126,7 +128,7 @@ TEST_FILTER_BY_STATE_DATA = [
 
 
 @pytest.fixture
-def operations_data() -> List[Dict[str, Any]]:
+def operations_data() -> OperationsList:
     return [
         {"id": 1, "state": "EXECUTED"},
         {"id": 2, "state": "CANCELED"},
@@ -147,7 +149,7 @@ def filter_state(request: pytest.FixtureRequest) -> Any:
 # Расположение: src.processing
 # test_sort_by_date
 @pytest.fixture
-def sort_by_date_data() -> List[Dict[str, Any]]:
+def sort_by_date_data() -> OperationsList:
     return [
         {"id": 414288290, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
         {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
@@ -157,7 +159,7 @@ def sort_by_date_data() -> List[Dict[str, Any]]:
 
 
 @pytest.fixture
-def sort_by_date_double_data() -> List[Dict[str, Any]]:
+def sort_by_date_double_data() -> OperationsList:
     return [
         {"id": 1, "date": "2019-07-03T18:35:29.512364"},
         {"id": 2, "date": "2018-06-30T02:08:58.425572"},
@@ -168,9 +170,72 @@ def sort_by_date_double_data() -> List[Dict[str, Any]]:
 
 
 @pytest.fixture
-def sample_transactions() -> List[Dict[str, Any]]:
+def sample_transactions() -> OperationsList:
     return [
         {"id": 939719570, "operationAmount": {"currency": {"code": "USD"}}, "description": "Перевод организации"},
         {"id": 142264268, "operationAmount": {"currency": {"code": "USD"}}, "description": "Перевод со счета на счет"},
         {"id": 873106923, "operationAmount": {"currency": {"code": "RUB"}}, "description": "Перевод со счета на счет"},
     ]
+
+
+# Расположение: src.data_loader
+@pytest.fixture
+def test_data() -> OperationsList:
+    return [
+        {
+            "id": "650703",
+            "state": "EXECUTED",
+            "date": "2023-09-05T11:30:32Z",
+            "amount": "16210",
+            "currency_name": "Sol",
+            "currency_code": "PEN",
+            "from": "Счет 58803664561298323391",
+            "to": "Счет 39745660563456619397",
+            "description": "Перевод организации",
+        },
+        {
+            "id": "3598919",
+            "state": "EXECUTED",
+            "date": "2020-12-06T23:00:58Z",
+            "amount": "29740",
+            "currency_name": "Peso",
+            "currency_code": "COP",
+            "from": "Discover 3172601889670065",
+            "to": "Discover 0720428384694643",
+            "description": "Перевод с карты на карту",
+        },
+        {
+            "id": "593027",
+            "state": "CANCELED",
+            "date": "2023-07-22T05:02:01Z",
+            "amount": "30368",
+            "currency_name": "Shilling",
+            "currency_code": "TZS",
+            "from": "Visa 1959232722494097",
+            "to": "Visa 6804119550473710",
+            "description": "Перевод с карты на карту",
+        },
+    ]
+
+
+@pytest.fixture
+def csv_file_path(test_data: OperationsList) -> Path:
+    columns_order = ["id", "state", "date", "amount", "currency_name", "currency_code", "from", "to", "description"]
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv", mode="wb") as f:
+        pd.DataFrame(test_data, columns=columns_order).astype(str).to_csv(f, index=False)
+        return Path(f.name)
+
+
+@pytest.fixture
+def json_file_path(test_data: OperationsList) -> Path:
+    data_as_strings = [{k: str(v) for k, v in row.items()} for row in test_data]
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".json", mode="w", encoding="utf-8") as f:
+        json.dump(data_as_strings, f)
+        return Path(f.name)
+
+
+@pytest.fixture
+def excel_file_path(test_data: OperationsList) -> Path:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx", mode="wb") as f:
+        pd.DataFrame(test_data).astype(str).to_excel(f, index=False)
+        return Path(f.name)
