@@ -46,7 +46,7 @@ poetry install
 
 ## Примеры использования:
 
-Запустите файл `main.py` с примерами:  
+Запустите файл [main.py](main.py) с примерами:  
 `python main.py`
 
 * Маскировка данных:
@@ -199,7 +199,7 @@ Visa 5309 98** **** 5498 -> Mastercard 4613 14** **** 7768
 * Обработка ошибок, если файл не найден или неверный формат.
 * Проверка возврата пустого списка, если данные в файле — не список.
 
-### [test_data_loader](tests/test_data_loadder.py) для [data_loader](src/data_loader.py)
+### [test_data_loader](tests/test_data_loader.py) для [data_loader](src/data_loader.py)
 `test_load_csv`, `test_load_json`, `test_load_excel`, `test_empty_excel`, `test_corrupted_excel`,
 `test_invalid_excel_structure`, `test_large_numbers_in_excel`, `test_missing_columns_excel`
 
