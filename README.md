@@ -30,18 +30,24 @@
 
 ## Установка:
 
-1. Клонируйте репозиторий:
+1. Клонируйте репозиторий:  
 >git clone git@github.com:Yulianna-Aleeva/bank-widget.git
-2. Перейдите в папку проекта:
->cd bank-widget
-3. Установите зависимости:
->poetry install
+
+[//]: # (2. Перейдите в папку проекта:  )
+[//]: # (```sh)
+[//]: # (cd bank-widget)
+[//]: # (```)
+
+2. Установите зависимости:
+```sh
+poetry install
+```
 
 
 ## Примеры использования:
 
-Запустите файл `main.py` с примерами:
->poetry run python main.py
+Запустите файл `main.py` с примерами:  
+`python main.py`
 
 * Маскировка данных:
 >print(mask_account_card("Visa Platinum 7000792289606361"))
