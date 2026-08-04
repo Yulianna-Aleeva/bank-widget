@@ -30,18 +30,24 @@
 
 ## Установка:
 
-1. Клонируйте репозиторий:
+1. Клонируйте репозиторий:  
 >git clone git@github.com:Yulianna-Aleeva/bank-widget.git
-2. Перейдите в папку проекта:
->cd bank-widget
-3. Установите зависимости:
->poetry install
+
+[//]: # (2. Перейдите в папку проекта:  )
+[//]: # (```sh)
+[//]: # (cd bank-widget)
+[//]: # (```)
+
+2. Установите зависимости:
+```sh
+poetry install
+```
 
 
 ## Примеры использования:
 
-Запустите файл `main.py` с примерами:
->poetry run python main.py
+Запустите файл [main.py](main.py) с примерами:  
+`python main.py`
 
 * Маскировка данных:
 >print(mask_account_card("Visa Platinum 7000792289606361"))
@@ -193,7 +199,7 @@ Visa 5309 98** **** 5498 -> Mastercard 4613 14** **** 7768
 * Обработка ошибок, если файл не найден или неверный формат.
 * Проверка возврата пустого списка, если данные в файле — не список.
 
-### [test_data_loader](tests/test_data_loadder.py) для [data_loader](src/data_loader.py)
+### [test_data_loader](tests/test_data_loader.py) для [data_loader](src/data_loader.py)
 `test_load_csv`, `test_load_json`, `test_load_excel`, `test_empty_excel`, `test_corrupted_excel`,
 `test_invalid_excel_structure`, `test_large_numbers_in_excel`, `test_missing_columns_excel`
 
